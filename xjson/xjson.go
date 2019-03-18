@@ -1,15 +1,8 @@
 package xjson
 
-type XjsonSuccess struct {
-    Status uint8       `json:"status"`
-    Data   interface{} `json:"data,omitempty"`
-}
-
-type XjsonError struct {
-    Status    uint8       `json:"status"`
-    Error     string      `json:"error"`
-    ErrorCode int         `json:"error_code"`
-    Data      interface{} `json:"data,omitempty"`
+type Xjson interface {
+    Success(data interface{}) *XjsonSuccess
+    Error(code int, error string, data interface{}) *XjsonError
 }
 
 func Success(data interface{}) *XjsonSuccess {
