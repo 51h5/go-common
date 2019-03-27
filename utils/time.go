@@ -10,7 +10,7 @@ const (
     TIME_LAYOUT_YMD = "20060102"
     TIME_LAYOUT_YM  = "200601"
     TIME_LAYOUT_Y   = "2006"
-    TIME_FORMAT_YM = "%d%d"
+    TIME_FORMAT_YM  = "%d%d"
 )
 
 func YearWeek(t time.Time) string {
@@ -29,7 +29,7 @@ func YearWeekf(t time.Time, format string) string {
 
 func YearWeekInt(t time.Time) int {
     y, w := t.ISOWeek()
-    return y * 100 + w
+    return y*100 + w
 }
 
 // 获取指定时间所在周的每日时间(layout: "20060102")
@@ -66,7 +66,7 @@ func WeekDaysf(t time.Time, format string) []string {
 
     for i := total - 1; i >= 0; i-- {
         // fmt.Printf("<WeekDays.for> %d, len: %d, cap: %d\n", i, len(days), cap(days))
-        days[total - i - 1] = t.Add(time.Duration(-1 * i * 24) * time.Hour).Format(format)
+        days[total-i-1] = t.Add(time.Duration(-1*i*24) * time.Hour).Format(format)
         // days = append(days, t.Add(time.Duration(-1 * i * 24) * time.Hour).Format(format))
     }
 
