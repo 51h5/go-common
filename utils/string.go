@@ -1,5 +1,19 @@
 package utils
 
+import (
+    "fmt"
+    "strconv"
+)
+
+// 字符串形式浮点小数转换为整数字符串
+func Float64StringToInt64String(f string) string {
+    f64, err := strconv.ParseFloat(f, 64)
+    if err != nil {
+        return ""
+    }
+    return fmt.Sprintf("%.0f", f64)
+}
+
 // 查询无重复字符的最长字符片段
 // Given a string, find the length of the longest substring without repeating characters.
 func LengthOfNonRepeatingSubStr(s string) int {
