@@ -24,6 +24,23 @@ func SignPKCS1v15WithKey(src []byte, key *rsa.PrivateKey, hash crypto.Hash) ([]b
     return rsa.SignPKCS1v15(rand.Reader, key, hash, h.Sum(nil))
 }
 
+// 同步通知验签
+// @see https://docs.open.alipay.com/200/106120
+func VerifyPKCS1v15(src, sig, key []byte, hash crypto.Hash) error {
+    pub, err := ParsePKCS1PublicKey(key)
+    if err != nil {
+        return err
+    }
+    return VerifyPKCS1v15WithKey(src, sig, pub, hash)
+}
+
+func VerifyPKCS1v15WithKey(src, sig []byte, key *rsa.PublicKey, hash crypto.Hash) error {
+    var h = hash.New()
+    h.Write(src)
+    return rsa.VerifyPKCS1v15(key, hash, h.Sum(nil), sig)
+}
+
+
 func EncryptPKCS1v15(data, publicKey []byte) ([]byte, error) {
     key, err := ParsePKCS1PublicKey(publicKey)
     if err != nil {
