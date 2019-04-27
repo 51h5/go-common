@@ -9,7 +9,7 @@ const (
     pemRsaPrivateKeyPrefix = "-----BEGIN RSA PRIVATE KEY-----"
     pemRsaPrivateKeySuffix = "-----END RSA PRIVATE KEY-----"
     pemPrivateKeyPrefix    = "-----BEGIN PRIVATE KEY-----"
-    pemPrivateKeySuffix    = "-----BEGIN PRIVATE KEY-----"
+    pemPrivateKeySuffix    = "-----END PRIVATE KEY-----"
     pemPublicKeyPrefix     = "-----BEGIN PUBLIC KEY-----"
     pemPublicKeySuffix     = "-----END PUBLIC KEY-----"
 )
@@ -24,6 +24,18 @@ func FormatRsaPrivateKey(raw string) (result []byte) {
 
 func FormatPrivateKey(raw string) (result []byte) {
     return formatKey(raw, pemPrivateKeyPrefix, pemPrivateKeySuffix)
+}
+
+func TrimPublickKey(raw string) string {
+    return trimKey(raw, pemPublicKeyPrefix, pemPublicKeySuffix)
+}
+
+func TrimRsaPrivateKey(raw string) string {
+    return trimKey(raw, pemRsaPrivateKeyPrefix, pemRsaPrivateKeySuffix)
+}
+
+func TrimPrivateKey(raw string) string {
+    return trimKey(raw, pemPrivateKeyPrefix, pemPrivateKeySuffix)
 }
 
 func formatKey(raw, prefix, suffix string) (result []byte) {
