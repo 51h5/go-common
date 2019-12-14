@@ -7,10 +7,15 @@ import (
     "errors"
 )
 
+var (
+    errPublicKeyInvalid  = errors.New("public key invalid")
+    errPrivateKeyInvalid = errors.New("private key invalid")
+)
+
 func ParsePKCS1PrivateKey(data []byte) (*rsa.PrivateKey, error) {
     block, _ := pem.Decode(data)
     if block == nil {
-        return nil, errors.New("private key invalid")
+        return nil, errPrivateKeyInvalid
     }
 
     key, err := x509.ParsePKCS1PrivateKey(block.Bytes)
@@ -24,7 +29,7 @@ func ParsePKCS1PrivateKey(data []byte) (*rsa.PrivateKey, error) {
 func ParsePKCS1PublicKey(data []byte) (*rsa.PublicKey, error) {
     block, _ := pem.Decode(data)
     if block == nil {
-        return nil, errors.New("public key invalid")
+        return nil, errPublicKeyInvalid
     }
 
     pubInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
@@ -34,7 +39,7 @@ func ParsePKCS1PublicKey(data []byte) (*rsa.PublicKey, error) {
 
     key, ok := pubInterface.(*rsa.PublicKey)
     if !ok {
-        return nil, errors.New("public key invalid")
+        return nil, errPublicKeyInvalid
     }
 
     return key, nil
