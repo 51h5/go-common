@@ -2,4 +2,7 @@
 .idea
 *.iml
 
+*.test
+*.out
+
 vendor/
