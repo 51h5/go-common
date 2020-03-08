@@ -30,8 +30,8 @@ type AppSession struct {
 
 // 微信小程序 jssdk 的 getUserInfo 接口返回结构
 type AppUserInfo struct {
-    OpenId    string                `json:"openid"`
-    UnionId   string                `json:"unionid"`
+    OpenId    string                `json:"openId"`
+    UnionId   string                `json:"unionId"`
     NickName  string                `json:"nickName"`
     Gender    int                   `json:"gender"`
     AvatarUrl string                `json:"avatarUrl"`
@@ -51,15 +51,27 @@ type App struct {
     appId      string
     secret     string
     sessionKey string
+    client     *http.Client
 }
 
 func NewApp(appid, secret, session string) *App {
     return &App{appId: appid, secret: secret, sessionKey: session}
 }
 
+func (w *App) clientFallback() *http.Client {
+    if w.client == nil {
+        return http.DefaultClient
+    }
+    return w.client
+}
+
+func (w *App) SetClient(c *http.Client) {
+    w.client = c
+}
+
 // 登录凭证校验 (auth.code2Session)
 func (w *App) Code2Session(code string) (*AppSession, error) {
-    r, err := http.Get(fmt.Sprintf(apiCode2Session, w.appId, w.secret, code))
+    r, err := w.clientFallback().Get(fmt.Sprintf(apiCode2Session, w.appId, w.secret, code))
     if err != nil {
         if r != nil {
             r.Body.Close()
