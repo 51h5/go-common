@@ -6,7 +6,7 @@ import (
     "testing"
 )
 
-func TestSuccess(t *testing.T) {
+func TestXjsonSuccess(t *testing.T) {
     j1 := []byte(`{"status":1,"data":"hello"}`)
     b1, _ := json.Marshal(XjsonSuccess{Status: 1, Data: "hello"})
     if !bytes.Equal(j1, b1) {
@@ -24,7 +24,7 @@ func TestSuccess(t *testing.T) {
     }
 }
 
-func TestError(t *testing.T) {
+func TestXjsonError(t *testing.T) {
     j3 := []byte(`{"status":0,"error":"PARAMS_INVALID","error_code":1002,"data":"hello"}`)
     b3, _ := json.Marshal(XjsonError{
         Status:    0,
