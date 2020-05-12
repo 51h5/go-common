@@ -1,3 +1,3 @@
-module 51h5.com/common
+module gitlab.51h5.com/go/common
 
-go 1.13
+go 1.14

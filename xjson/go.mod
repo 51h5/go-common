@@ -1,3 +1,3 @@
-module 51h5.com/common/xjson
+module gitlab.51h5.com/go/common/xjson
 
-go 1.13
+go 1.14
