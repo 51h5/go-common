@@ -1,10 +1,19 @@
 package utils
 
 import (
+    crand "crypto/rand"
+    "encoding/binary"
     "math/rand"
 )
 
-// 概率转换
+func CryptoRand() uint32 {
+    var n uint32
+    binary.Read(crand.Reader, binary.LittleEndian, &n)
+    return n
+}
+
+// RateToSeed 概率转换
+//
 // 百分比 => 概率种子
 // {rate: 概率} / 100 = {x: 概率种子} / {sum: 种子基数}
 func RateToSeed(rate, sum uint32) uint32 {
@@ -15,7 +24,8 @@ func RateToSeed(rate, sum uint32) uint32 {
     return rate / 100
 }
 
-// 概率计算
+// DrawWithRate 概率计算
+//
 // rates => map[奖品标示]中奖概率
 func DrawWithRate(rates map[uint8]uint32, sum uint32) uint8 {
     if len(rates) == 0 || sum == 0 {
@@ -60,4 +70,37 @@ func DrawWithRate(rates map[uint8]uint32, sum uint32) uint8 {
     // fmt.Printf("%v\n", pool)
 
     return pool[0]
+}
+
+// WeightRand 权重随机抽奖
+//
+// [ 权重1, 权重2, 权重3, ... ] =>  命中索引
+func WeightRand(weights []int) int {
+    var weightSum int
+    for _, w := range weights {
+        weightSum += w
+    }
+
+    if weightSum <= 0 {
+        return -1
+    }
+
+    weight := rand.Intn(weightSum)
+
+    var start, end int
+    for i, w := range weights {
+        if w < 0 {
+            continue
+        }
+
+        end += w
+
+        if w > 0 && start <= weight && weight < end {
+            return i
+        }
+
+        start = end
+    }
+
+    return -1
 }

@@ -1,6 +1,16 @@
 package utils
 
-import "testing"
+import (
+	"testing"
+
+    "github.com/stretchr/testify/assert"
+)
+
+func TestCryptoRand(t *testing.T) {
+    if CryptoRand() <= 0 {
+        t.Failed()
+    }
+}
 
 func TestRateToSeed(t *testing.T) {
     var seed uint32
@@ -66,6 +76,30 @@ func TestDrawWithRate(t *testing.T) {
     }
 }
 
+func TestWeightRand(t *testing.T) {
+    var weightsEmpty []int
+
+    assert.Equal(t, -1, WeightRand(weightsEmpty), "空权重")
+
+    assert.Equal(t, -1, WeightRand([]int{0, 0, 0, 0}), "全部0权重")
+
+    assert.Equal(t, 0, WeightRand([]int{1000}), "仅一个权重且非0")
+
+    assert.Equal(t, 1, WeightRand([]int{0, 10000}), "仅一个权重且仅最后一个非0")
+    assert.Equal(t, 3, WeightRand([]int{0, 0, 0, 10000}), "多个权重且仅最后一个非0")
+
+    assert.Equal(t, 0, WeightRand([]int{100, 0, 0, 0}), "多个权重且仅第一个非0")
+    assert.Equal(t, 1, WeightRand([]int{0, 1000, 0, 0}), "多个权重且仅第二个非0")
+
+    assert.NotEqual(t, -1, WeightRand([]int{100, 200, 400, 1000}), "多个权重且全部非0")
+}
+
+func BenchmarkCryptoRand(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        CryptoRand()
+    }
+}
+
 func BenchmarkDrawWithRate(b *testing.B) {
     rates := map[uint8]uint32{
         1: RateToSeed(10, 100000),
@@ -73,5 +107,12 @@ func BenchmarkDrawWithRate(b *testing.B) {
 
     for i := 0; i < b.N; i ++ {
         _ = DrawWithRate(rates, 100000)
+    }
+}
+
+func BenchmarkWeightRand(b *testing.B) {
+    weights := []int{100, 500, 1200, 3000, 6000}
+    for i := 0; i < b.N; i++ {
+        WeightRand(weights)
     }
 }
