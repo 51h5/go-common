@@ -4,5 +4,6 @@
 *.sum
 *.test
 *.out
+*.sh
 
 vendor/
